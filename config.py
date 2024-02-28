@@ -25,4 +25,5 @@ def load_env_var(varname:str)->Union[int, float, str]:
         raise RuntimeError(f'Variavel de ambiente {varname} não definida.')
     
 
+load_env()
 CKAN_DOMAIN=load_env_var('TSE_CKAN_DOMAIN') 
