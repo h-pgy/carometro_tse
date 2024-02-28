@@ -1,9 +1,46 @@
 import tempfile
 from typing import List, Generator
 from io import BytesIO
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, NamedTemporaryFile
 from zipfile import ZipFile
 import os
+
+def unzip_from_bytes(content:bytes, members_to_extract:List[str]=None)->Generator[str, str, str]:
+
+    with TempZip(content) as tempzip:
+        with TempUnZipper(tempzip, members_to_extract) as tempunzip:
+            for file in tempunzip:
+                yield file
+
+class TempZip:
+
+    def __init__(self, content:bytes):
+
+        self.tempfile = self.__create_tempfile()
+        self.__write_to_temp(content)
+        self.zipfile = self.__gen_zipfile()
+
+    def __create_tempfile(self)->NamedTemporaryFile:
+
+        return NamedTemporaryFile()
+
+    def __write_to_temp(self, content:bytes):
+
+        self.tempfile.write(content)
+
+    def __gen_zipfile(self):
+
+        return ZipFile(self.tempfile.name)
+    
+    def __enter__(self)->ZipFile:
+
+        return self.zipfile
+    
+    def __exit__(self,  type, value, traceback)->None:
+
+        self.zipfile.close()
+        self.tempfile.close()
+
 
 class TempUnZipper:
 
