@@ -29,3 +29,14 @@ def datetime_out_format_to_false(func):
             return False
     
     return wrapper
+
+def boolean_return(func):
+    '''Overrides a function that may return any object and converts if to boolean'''
+
+    def wrapper(*args, **kwargs):
+
+        result = func(*args, **kwargs)
+
+        return bool(result)
+    
+    return wrapper
