@@ -50,7 +50,7 @@ class FilterResources:
         try:
             return  getattr(self.__search_obj, func)
         except AttributeError:
-            raise NotImplementedError('Função de busca {func} não implementada')
+            raise NotImplementedError(f'Função de busca {func} não implementada')
         
     @property
     def search_options(self):

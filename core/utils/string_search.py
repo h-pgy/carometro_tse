@@ -65,7 +65,7 @@ class StringSearch:
     
 
     def search(self, needle:str, haystack:Union[str, List[str]], case_insensitve:bool, 
-                search_type:str)->List[str]:
+                search_type:Literal['regex', 'substring', 'literal'])->List[str]:
         
         if search_type=='regex':
 

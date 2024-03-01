@@ -1,11 +1,14 @@
-from core.utils import search_string, str_to_full_date_hour
+from core.utils import search_string, str_to_full_date_hour, datetime_search
 from core.utils.decorators import missing_key_to_false, datetime_out_format_to_false, boolean_return
-from typing import List, Literal, Callable, Union, overload
+from typing import Literal
 from datetime import datetime
-from ..api import CkanActionApiRequest
 
 
 class ResourceSearch:
+
+    def __init__(self, day_precision=True)->None:
+
+        self.day_precision=day_precision
 
     def __extract_datetime(self, rsce:dict, key:str)->datetime:
 
@@ -50,39 +53,22 @@ class ResourceSearch:
 
         val = self.__extract_string(rsce, 'id')
         return search_string(search_term, val, True, search_type=how)
-
-# criar uma classe para abstrair isso igual fiz com search string    
-"""     @missing_key_to_false
-    @datetime_out_format_to_false
-    def created_before(self, rsce:dict, date:datetime)->bool:
-
-        created_at = self.__extract_datetime(rsce, 'created')
-
-        return created_at <= date
-
-    @missing_key_to_false
-    @datetime_out_format_to_false
-    def created_after(self, rsce:dict, date:datetime)->bool:
-
-        created_at = self.__extract_datetime(rsce, 'created')
-
-        return created_at >= date
     
     @missing_key_to_false
     @datetime_out_format_to_false
-    def modified_before(self, rsce:dict, date:datetime)->bool:
+    def created(self, rsce:dict, search_term:datetime, 
+                how:Literal['after', 'after_equals', 'before', 'before_equals', 'equals']='equals')->bool:
 
-        modified_at = self.__extract_datetime(rsce, 'last_modified')
-
-        return modified_at <= date
-
+        val = self.__extract_datetime(rsce, 'created')
+        return datetime_search(search_term, val, self.day_precision, how)
+    
     @missing_key_to_false
     @datetime_out_format_to_false
-    def modified_after(self, rsce:dict, date:datetime)->bool:
+    def last_modified(self, rsce:dict, search_term:datetime, 
+                how:Literal['after', 'after_equals', 'before', 'before_equals', 'equals']='equals')->bool:
 
-        modified_at = self.__extract_datetime(rsce, 'last_modified')
-
-        return modified_at >= date """
+        val = self.__extract_datetime(rsce, 'last_modified')
+        return datetime_search(search_term, val, self.day_precision, how)
     
 
     
