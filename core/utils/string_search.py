@@ -25,9 +25,16 @@ class StringSearch:
     def __case_insentive(self, resource:str)->str:
 
         return resource.lower().strip()
-    
-    def __base_search(self, needle:str, haystack:List[str], case_insensitve:bool, callback:Callable)->List[str]:
 
+    def __solve_haystack_type(self, haystack:Union[str, List[str]])->List[str]:
+
+        if type(haystack) is str:
+            return [haystack]
+        return haystack
+    
+    def __base_search(self, needle:str, haystack:Union[str, List[str]], case_insensitve:bool, callback:Callable)->List[str]:
+
+        haystack = self.__solve_haystack_type(haystack)
         matches = []
 
         for resource in haystack:
@@ -39,25 +46,25 @@ class StringSearch:
         return matches
     
     @overload
-    def search(self, needle:str, haystack:List[str], case_insensitve:bool, 
+    def search(self, needle:str, haystack:Union[str, List[str]], case_insensitve:bool, 
                earch_type:Literal['regex'])->List[str]:
 
         ...
 
     @overload
-    def search(self, needle:str, haystack:List[str], case_insensitve:bool, 
+    def search(self, needle:str, haystack:Union[str, List[str]], case_insensitve:bool, 
                search_type:Literal['substring'])->List[str]:
         
         ...
     
     @overload
-    def search(self, needle:str, haystack:List[str], case_insensitve:bool, 
+    def search(self, needle:str, haystack:Union[str, List[str]], case_insensitve:bool, 
                search_type:Literal['literal'])->List[str]:
         
         ...
     
 
-    def search(self, needle:str, haystack:List[str], case_insensitve:bool, 
+    def search(self, needle:str, haystack:Union[str, List[str]], case_insensitve:bool, 
                 search_type:str)->List[str]:
         
         if search_type=='regex':
@@ -69,17 +76,17 @@ class StringSearch:
         elif search_type=='substring':
 
             filtered = self.__base_search(needle, haystack, case_insensitve, 
-                                  self.__re_pattern_search)
+                                  self.__substring_search)
             
         elif search_type=='literal':
             filtered = self.__base_search(needle, haystack, case_insensitve, 
-                                  self.__re_pattern_search)
+                                  self.__literal_search)
         else:
             raise NotImplementedError(f'Search type {search_type} not implemented.')
         
         return filtered
 
-    def __call__(self,needle:str, haystack:List[str], case_insensitve:bool, 
+    def __call__(self,needle:str, haystack:Union[str, List[str]], case_insensitve:bool, 
                 search_type:str)->List[str]:
         
         return self.search(needle, haystack, case_insensitve, search_type)
