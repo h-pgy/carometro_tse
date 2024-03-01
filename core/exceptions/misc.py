@@ -1,0 +1,4 @@
+
+
+class DatetimeOutOfFormat(ValueError):
+    pass
