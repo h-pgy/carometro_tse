@@ -18,7 +18,7 @@ class PkgSearch:
         pkg_list = pkg_list or self.pkgs
         return [search_string(term, pkg_list, case_insensitive, how)]
     
-    def __call__(self, term:str, how:Literal['regex', 'substring', 'literal'], 
+    def __call__(self, term:str, how:Literal['regex', 'substring', 'literal']='substring', 
                case_insensitive:bool=True, pkg_list:List[str]=None)->List[str]:
         
         return self.search(term, how, case_insensitive, pkg_list)
