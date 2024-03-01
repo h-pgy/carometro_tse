@@ -1,6 +1,6 @@
 from core.utils import search_string
 from typing import List, Literal
-from .api import CkanActionApiRequest
+from ..api import CkanActionApiRequest
 
 
 class PkgSearch:
