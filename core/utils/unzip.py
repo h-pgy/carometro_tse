@@ -5,6 +5,11 @@ from tempfile import TemporaryDirectory, NamedTemporaryFile
 from zipfile import ZipFile
 import os
 
+def check_members(content:bytes)->List[str]:
+
+    with TempZip(content) as tempzip:
+        return tempzip.namelist()
+
 def unzip_from_bytes(content:bytes, members_to_extract:List[str]=None)->Generator[str, str, str]:
 
     with TempZip(content) as tempzip:
